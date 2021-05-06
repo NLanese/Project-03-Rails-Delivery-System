@@ -1,5 +1,6 @@
-<%= form_for @user do | f | %>
-    <h3><%= @message %><h3>
+<h1>Create a New Account!</h1>
+<h3><%= @message %><h3>
+<%= form_with model: @user do | f | %>
     <br>
     <%= f.label :username %>
     <%= f.text_field :name %>

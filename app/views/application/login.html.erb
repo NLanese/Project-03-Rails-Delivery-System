@@ -1,0 +1,14 @@
+<h1>Welcome Back! Enter Your information to Login</h1>
+
+<%= form_for :user, :url => {:controller => :sessions, :action => :create} do | f | %>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+    <br>
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+    <br>
+    <%= f.submit "Login" %>
+<% end %>
+<br>
+<h2>Don't have an account?</h2>
+<p>Create one <%= link_to "here.", signup_path %></p>

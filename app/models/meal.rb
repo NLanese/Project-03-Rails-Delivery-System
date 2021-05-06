@@ -7,9 +7,19 @@ class Meal < ActiveRecord::Base
 
     def price
         total = 0
-        deliveries.each do | sel |
+        items.each do | sel |
             total = total + sel.price
         end
+    end
+
+    def display
+        rStr = "-------------------------"               #            --------------------------
+        items.each do | itm |                            #            Penne Vodka - 12.99
+            rStr+= "\n#{itm.shortShow}"                  #            Cold Munchie Sub - 8.99
+        end                                              #            Large Pizza - 14.99
+        rStr+= "\nSubtotal: #{price}"                    #            Subtotal: 36.97
+        rStr+= "\n-------------------------"             #            --------------------------
+        return rStr
     end
 
     def self.find_vegetarian(meals)

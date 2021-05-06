@@ -1,7 +1,13 @@
-<h1><%= @user.name %>'s Customer Page! %></h1>
+<h1><%= @user.name %>'s Customer Page!</h1>
 <h4><%= @message %></h4>
-<h2>--------------------------------------------------------------------------</h2>
-<h5> 
+<h5>--------------------------------------------------------------------------</h5>
+<p> <strong>
   <%= link_to 'Edit Account', edit_user_path(@user) %> || <%= link_to 'Log Out', logout_path %> || <%= link_to 'Delete Account', delete_user_path(@user) %>
-</h5>
-<h2>--------------------------------------------------------------------------</h2>
+</strong> </p>
+<p><strong><%= link_to "Add Funds", add_funds_path(@user) %></strong></p>
+<h5>--------------------------------------------------------------------------</h5>
+<h3>
+  <%= link_to "Place New Order", new_user_delivery_path(@user) %>
+</h3>
+<br>
+<%= render partial: "deliveries/show", locals: {sel_user: @user} %>

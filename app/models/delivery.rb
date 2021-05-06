@@ -9,6 +9,7 @@ class Delivery < ActiveRecord::Base
 
     def price=(input)
         price = input * 1.07
+        price = price + tip
         return price
     end
 
