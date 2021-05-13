@@ -11,7 +11,8 @@ class SessionsController < ApplicationController
             #redirect_to admin_home_path
         else
             session[:admin] = false
-            redirect_to user_deliveries_path(@user)
+            session[:user_id] = @user.id
+            redirect_to user_path(@user)
         end
     end
 

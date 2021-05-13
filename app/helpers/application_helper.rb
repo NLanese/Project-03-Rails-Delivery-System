@@ -1,8 +1,22 @@
 module ApplicationHelper
 
 
+    def user_delivery_address_field(session)
+        if (isGuest(session))
+            return "<p>Address <input type= 'text' name= 'delivery[address]'></p>"
+        elsif (is_logged_in?(session))
+            return "<p>Address <input type= 'text' name= 'delivery[address]' value= '#{current_user(session).address}'></p>"
+        else
+            return "I haven't gotten here yet"
+        end
+    end
+
     def get_user
-        return User.find(params[:id])
+        return User.find(params[:id].to_i)
+    end
+
+    def get_user_delivery
+        return User.find(params[:user_id].to_i)
     end
 
     def clear_user(session)
@@ -27,14 +41,14 @@ module ApplicationHelper
 
     def redirect_if_invalid(session)
         if is_logged_in?(session)
-            if (current_user(session) == find_user.id)
+            if (current_user(session) == get_user)
                 return true
             else
-                addErrorMessage(session, "You cannot view another user's delivery page!")
-                redirect_to user_deliveries_path(current_user(session))
+                addErrorMessage(session, "You cannot view or edit something belonging to another user")
+                redirect_to user_path(current_user(session))
             end
         else
-            addErrorMessage(session, "You need to be logged or to view your deliveries")
+            addErrorMessage(session, "You need to be logged or to view deliveries or accounts")
             redirect_to login_path
         end
     end
@@ -68,7 +82,7 @@ module ApplicationHelper
     end
 
     def clearSession(session)
-        session = nil
+        session = []
     end
 
     def has_errors?(session)
@@ -122,6 +136,7 @@ module ApplicationHelper
         rStr+= "\nTotal: $#{del.price}"                                              # Total: $51.21
         rStr+= "\n=================================================="                # ==============================================
         rStr+= "\n<strong><%= link_to 'Order Again', order_again_path(del)%></strong>"# Order Again
+        return rStr
     end
 
     def display_deliveries(delArr)
@@ -138,24 +153,27 @@ module ApplicationHelper
         end
     end
 
-    def the_new_meal_form
-        all_food_groups = Item.all.map do | sel |
-            return sel.food_group
+    def the_new_meal_form(delivery = nil)
+        foodgroups = Item.get_foodgroups
+        rStr = "<p>(Optional) Meal Name: <input type= 'text' name='meal[name]'></p>"
+        foodgroups.each do | sel |
+            rStr+= "\n<h3>#{sel}</h3>"
+            groupedFoods = Item.list_items_of_group(sel)
+            rStr += Item.meal_field_maker(groupedFoods, delivery)
         end
-        all_food_groups = all_food_groups.uniq
-        all_food_groups.each do | sel |
-            Item.meal_field_maker(sel)
-        end
+        return (rStr)
     end
 
-    def the_edit_meal_form
-        all_food_groups = Item.all.map do | sel |
-            return sel.food_group
+    def makeDelivery(params)
+        del_params= params.require(:delivery).permit(:user, :address, meal_attributes[:name, :items[]])
+        meal params= params.require(:meal).permit(:items[])
+        if (params[delivery][:meal] != "")
+            mealName = params[:delivery][:meal]
+        else
+            neamlName = nil
         end
-        all_food_groups = all_food_groups.uniq
-        all_food_groups.each do | sel |
-            Item.meal_field_maker(sel)
-        end
+        delivery = Delivery.new(address: del_params[:address], user: User.find(del_params[:user]))
     end
+
 
 end

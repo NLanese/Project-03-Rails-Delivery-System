@@ -1,13 +1,22 @@
 <h1>Edit Your Account Information</h1>
+<%= @message %>
 <%= form_for @user do | f | %>
     <%= f.label :name %>
     <%= f.text_field :name %>
     <br>
-    <%= f.label :password %>
+    <%= f.label :address %>
+    <%= f.text_field :address %>
+    <p>New Password (Optional): </p>
+    <input type= "text" name= "user[new_password]">
+    <br>
+    <p>Your old Password: </p>
     <%= f.password_field :password %>
     <br>
     <%= f.submit "Edit" %>
 <% end %>
 <br>
-<h2>Don't have an account?</h2>
-<p>Create one <%= link_to "here.", signup_path %></p>
+
+<br>
+<br>
+<br>
+<%= link_to "Return", user_path(@user) %>

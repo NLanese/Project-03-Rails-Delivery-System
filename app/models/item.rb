@@ -11,18 +11,22 @@ class Item < ActiveRecord::Base
         return "#{name} - $#{price}"
     end
 
-    def self.list_items(food_type)
-        foods = Item.where(food_group: "food_type")
+    def self.list_items_of_group(food_type)
+        return Item.where(food_group: food_type)
     end
 
-    def self.meal_field_maker(foods)
-        food.each do | sel |
-            puts "<input type= 'checkbox' name= 'meal[items][], value= '#{sel.id}'> <#{sel.show}>"
+    def self.get_foodgroups
+        rArr = Item.all.map do | sel |
+            sel.food_group
         end
+        rArr = rArr.uniq
+        return rArr
     end
 
-    def self.edit_meal_field_maker(foods, delivery)
-        food.each do | menu_item |
+    def self.meal_field_maker(foods, delivery = nil)
+        rStr = ""
+        if (delivery.meal)
+        foods.each do | sel |
             matches = false
             delivery.meal.items.each do | del_item |
                 if del_item.id == menu_item.id
@@ -30,11 +34,17 @@ class Item < ActiveRecord::Base
                 end
             end
             if (matches)
-                puts "<input type= 'checkbox' name= 'meal[items][], value= '#{sel.id}' checked> <#{sel.show}>"
+                puts "<p><input type= 'checkbox' name= 'meal[items][]' value= '#{sel.id}' checked> <#{sel.show}></p>"
             else
-                puts "<input type= 'checkbox' name= 'meal[items][], value= '#{sel.id}'> <#{sel.show}>"
+                puts "<input type= 'checkbox' name= 'meal[items][]' value= '#{sel.id}'> <#{sel.show}>"
             end
         end
+        else
+            foods.each do | sel |
+                rStr += "<p><input type= 'checkbox' name= 'meal[items][], value= '#{sel.id}'> #{sel.show} </p>"
+            end
+        end
+        return rStr
     end
 
 end

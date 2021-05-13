@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_05_222301) do
+ActiveRecord::Schema.define(version: 2021_05_10_041302) do
 
   create_table "deliveries", force: :cascade do |t|
     t.string "address"
     t.integer "meal_id"
     t.integer "user_id"
-    t.decimal "price"
     t.boolean "delivered"
     t.decimal "tip"
+    t.float "price"
   end
 
   create_table "item_meals", force: :cascade do |t|
@@ -28,15 +28,15 @@ ActiveRecord::Schema.define(version: 2021_05_05_222301) do
 
   create_table "items", force: :cascade do |t|
     t.string "name"
-    t.decimal "price"
     t.string "food_group"
     t.string "description"
+    t.float "price"
   end
 
   create_table "meals", force: :cascade do |t|
     t.string "name"
-    t.decimal "price"
     t.integer "times_purchased"
+    t.float "price"
   end
 
   create_table "users", force: :cascade do |t|
