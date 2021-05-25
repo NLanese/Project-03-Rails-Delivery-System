@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
     end
 
     def login
+        @message = assignMessage(session)
         @user = User.new
     end
 

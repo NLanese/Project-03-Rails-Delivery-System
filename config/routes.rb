@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root "application#welcome"
   get "welcome", to: "application#welcome", as: "welcome"
   post "login", to: "application#login", as: "login"
+  get "login", to: "application#login"
   post "signup", to: "users#signup", as: "signup"
   get "signup", to: "users#signup"
   get "order_again/:id", to: "deliveries#order_again", as: "order_again"
@@ -14,10 +15,19 @@ Rails.application.routes.draw do
   get "end_session", to: "application#end_session"
   get "fix_my_session", to: "application#fix_session"
   post "users/:id/deliveries/new_user_delivery", to: "deliveries#payment_options"
+  post "guests/new", to: "guests#create", as: "new_guest"
+  get "guests/deliveries/new", to: "deliveries#new", as: "guest_delivery"
 
 
   resources :users, only: [:new, :create, :edit, :update, :show] do
     resources :deliveries, only: [:index, :show, :new, :create] # Index - Shows all your deliveries, seperated by delivered or not. New makes a new.... duh. Edit non-destructively makes a new one
     resources :meals, only: [:new, :create, :update, :create, :index, :show]
   end
+
+  namespace :admin do
+    resources :users
+    resources :deliveries
+    resources :meals
+  end
+
 end

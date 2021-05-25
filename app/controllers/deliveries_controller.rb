@@ -1,5 +1,6 @@
 class DeliveriesController < ApplicationController
     include ApplicationHelper
+    include ItemsHelper
     skip_before_action :verify_authenticity_token, :only => [:payment_options]
 
     def index
@@ -26,10 +27,10 @@ class DeliveriesController < ApplicationController
 
     def new
         @message = assignMessage(session)
-        if !(is_logged_in?(session))
-            redirect_to login_path
-        end
         if (isGuest(session))
+            @delivery = Delivery.new()
+        elsif !(is_logged_in?(session))
+            redirect_to login_path
         elsif !(isAdmin(session))
             if (get_user_delivery != current_user(session))
                 addErrorMessage("Cannot make a delivery for someone else")
@@ -38,11 +39,15 @@ class DeliveriesController < ApplicationController
             @user = get_user_delivery
             @delivery = Delivery.new()
         else
+            #Admin Stuff
         end
     end
 
     def payment_options
         binding.pry
+        payPar = params.require(:delivery).permit(:user, :address, meal_attributes:[:name, :items[], :id])
+        @delivery = Delivery.new(user: User.find(payPar[:delivery][:user].to_i), address: payPar[:delivery][:address], 
+        meal: Meal.new(name: payPar[:delivery][:meal][:name], items: get_meal_items(payPar[:delivery][:meal][:items[]])))
     end
 
 private

@@ -101,6 +101,16 @@ module ApplicationHelper
         end
     end
 
+    def deliveryAction(session, delivery = nil)
+        if isGuest(session)
+            return "new_guest_delivery"
+        elsif (delivery && delivery.items != [])
+            return "edit_user_delivery"
+        else
+            return "new_user_delivery"
+        end
+    end
+
     def user_deliveries_completed(user)
         rArr = user.deliveries.map do | sel |
             if sel.delivered == true
@@ -153,17 +163,6 @@ module ApplicationHelper
         end
     end
 
-    def the_new_meal_form(delivery = nil)
-        foodgroups = Item.get_foodgroups
-        rStr = "<p>(Optional) Meal Name: <input type= 'text' name='meal[name]'></p>"
-        foodgroups.each do | sel |
-            rStr+= "\n<h3>#{sel}</h3>"
-            groupedFoods = Item.list_items_of_group(sel)
-            rStr += Item.meal_field_maker(groupedFoods, delivery)
-        end
-        return (rStr)
-    end
-
     def makeDelivery(params)
         del_params= params.require(:delivery).permit(:user, :address, meal_attributes[:name, :items[]])
         meal params= params.require(:meal).permit(:items[])
@@ -173,6 +172,32 @@ module ApplicationHelper
             neamlName = nil
         end
         delivery = Delivery.new(address: del_params[:address], user: User.find(del_params[:user]))
+    end
+
+    def user_or_guest_meal_id(session)
+        if (isGuest(session))
+            return '<input type= "hidden" name= "delivery[user]" value="-100"'
+        else
+            return "<input type= \"hidden\" name= \"delivery[user]\" value=\"#{current_user(session).id}\""
+        end
+    end
+
+    def delivery_with_meal_params()
+        params.require(:delivery).permit(:user, :address, meal_attributes:[:name, :items[], :id])
+    end
+
+    def get_meal_items(arr_of_ids)
+        arr_of_ids.map do | sel |
+            Item.find(sel.to_i)
+        end
+    end
+
+    def redirect_if_not_admin(session)
+        if (isAdmin(session))
+            return true
+        else
+            redirect_to application/welcome
+        end
     end
 
 

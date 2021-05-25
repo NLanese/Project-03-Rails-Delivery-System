@@ -6,7 +6,9 @@
 <br>
 <%= button_to "Sign-Up", signup_path %>
 <br>
-<%= button_to "Guest"%>
+<%= button_to "Guest", new_guest_path%>
+<br>
+<%= link_to "Sign-In with Facebook", '/auth/facebook' %>
 <br>
 <h2>Just Browsing?</h2>
 <p>Click <%= link_to "here"%> to see the menu</p>

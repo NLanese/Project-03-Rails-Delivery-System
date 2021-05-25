@@ -1,6 +1,6 @@
 <h3><%= @message %></h3>
-<form method= "post" action= "new_user_delivery">
-    <input type= "hidden" name= "delivery[user]" value= <%= @user.id %> 
+<form method= "post" action= <%= deliveryAction(session, the_delivery) %>>
+    <%= user_or_guest_meal_id(session).html_safe %> 
     <%= user_delivery_address_field(session).html_safe %>
     <p>----------------------------------------------------</p>
     <%= the_new_meal_form(the_delivery).html_safe %>
@@ -8,4 +8,4 @@
     <p>Proceed to Payment <input type= "submit" value= "Proceed">
 </form>
 
-<p>Not sure yet? Click <%= link_to "here ", user_path(@user) %> to return to your homepage</p>
+<p> Not sure yet? Click <%= link_to 'here ', user_path(current_user(session)) %> to return to your homepage  </p>

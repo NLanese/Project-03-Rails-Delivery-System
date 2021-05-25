@@ -22,29 +22,4 @@ class Item < ActiveRecord::Base
         rArr = rArr.uniq
         return rArr
     end
-
-    def self.meal_field_maker(foods, delivery = nil)
-        rStr = ""
-        if (delivery.meal)
-        foods.each do | sel |
-            matches = false
-            delivery.meal.items.each do | del_item |
-                if del_item.id == menu_item.id
-                    matches = true
-                end
-            end
-            if (matches)
-                puts "<p><input type= 'checkbox' name= 'meal[items][]' value= '#{sel.id}' checked> <#{sel.show}></p>"
-            else
-                puts "<input type= 'checkbox' name= 'meal[items][]' value= '#{sel.id}'> <#{sel.show}>"
-            end
-        end
-        else
-            foods.each do | sel |
-                rStr += "<p><input type= 'checkbox' name= 'meal[items][], value= '#{sel.id}'> #{sel.show} </p>"
-            end
-        end
-        return rStr
-    end
-
 end

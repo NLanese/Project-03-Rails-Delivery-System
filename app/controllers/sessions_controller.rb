@@ -3,16 +3,17 @@ class SessionsController < ApplicationController
 
     def create
         @user = User.find_by(name: sessions_params[:name])
-        return head(:forbidden) unless @user.authenticate(sessions_params[:password])
-        set_current_user(session, @user)
-        session[:guest] = false
-        if (@user.admin)
-            session[:admin] = true
-            #redirect_to admin_home_path
-        else
+        if @user.authenticate(sessions_params[:password])
+            clearErrorMessage(session)
+            set_current_user(session, @user)
+            session[:guest] = false
             session[:admin] = false
             session[:user_id] = @user.id
             redirect_to user_path(@user)
+        else
+            clearErrorMessage(session)
+            addErrorMessage(session, "Incorrect password")
+            redirect_to login_path
         end
     end
 

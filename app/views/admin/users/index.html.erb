@@ -1,0 +1,14 @@
+<% @users.each do | sel | %>
+    ---------------------------
+    <br>
+    <% if sel.admin %>
+        Admin Account
+    <% end %>
+    <h2><%= sel.name %></h2>
+    <p><%= sel.address %></p>
+    <%= link_to 'Edit', edit_admin_user_path(sel) %>
+    <%= link_to "Delete", User.find(sel.id), method: :delete, data: { confirm: "Delete this users?" } %>
+    <p>-------------------------</p>
+<% end %>
+
+<%= link_to "Return Home", user_path(current_user(session)) %>
