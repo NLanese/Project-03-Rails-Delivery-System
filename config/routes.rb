@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   post "signup", to: "users#signup", as: "signup"
   get "signup", to: "users#signup"
   get "order_again/:id", to: "deliveries#order_again", as: "order_again"
+  post "order_delivered/:id", to: "deliveries#completed", as: "order_delivered"
   get "logout", to: "sessions#destroy", as: "logout"
   get "delete/:id", to: "users#delete", as: "delete_user"
   get "hard_delete/:id", to: "users#hard_delete", as: "hard_delete"
@@ -17,6 +18,8 @@ Rails.application.routes.draw do
   post "users/:id/deliveries/new_user_delivery", to: "deliveries#payment_options"
   post "guests/new", to: "guests#create", as: "new_guest"
   get "guests/deliveries/new", to: "deliveries#new", as: "guest_delivery"
+  get "user/:user_id/delivery/:del_id/pay_with_credit", to: "deliveries#pay_with_credit", as: "pay_with_credit"
+  get "user/delivery/:del_id/pay_with_cash", to: "deliveries#pay_with_cash", as: "pay_with_cash"
 
 
   resources :users, only: [:new, :create, :edit, :update, :show] do

@@ -7,10 +7,8 @@ class Delivery < ActiveRecord::Base
     belongs_to :user
 
 
-    def price=(input)
-        price = input * 1.07
-        price = price + tip
-        return price
+    def price
+        meal.price * 1.07
     end
 
         

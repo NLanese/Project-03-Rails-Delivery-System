@@ -10,16 +10,17 @@ class Meal < ActiveRecord::Base
         items.each do | sel |
             total = total + sel.price
         end
+        return total
     end
 
     def display
-        rStr = "-------------------------"               #            --------------------------
-        items.each do | itm |                            #            Penne Vodka - 12.99
-            rStr+= "\n#{itm.shortShow}"                  #            Cold Munchie Sub - 8.99
-        end                                              #            Large Pizza - 14.99
-        rStr+= "\nSubtotal: #{price}"                    #            Subtotal: 36.97
-        rStr+= "\n-------------------------"             #            --------------------------
-        return rStr
+        rStr = "<p>-------------------------</p>"               #            --------------------------
+        items.each do | itm |                            #                 Penne Vodka - 12.99
+            rStr+= "<p>#{itm.shortShow}</p>"                  #            Cold Munchie Sub - 8.99
+        end                                              #                 Large Pizza - 14.99
+        rStr+= "\n<p>Subtotal: #{price}</p>"                    #          Subtotal: 36.97
+        rStr+= "\n<p>-------------------------</p>"             #            --------------------------
+        return rStr.html_safe
     end
 
     def self.find_vegetarian(meals)

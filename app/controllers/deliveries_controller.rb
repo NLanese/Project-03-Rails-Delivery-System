@@ -26,28 +26,55 @@ class DeliveriesController < ApplicationController
 
 
     def new
-        @message = assignMessage(session)
-        if (isGuest(session))
-            @delivery = Delivery.new()
-        elsif !(is_logged_in?(session))
-            redirect_to login_path
-        elsif !(isAdmin(session))
-            if (get_user_delivery != current_user(session))
-                addErrorMessage("Cannot make a delivery for someone else")
-                redirect_to new_user_delivery_path(current_user(session))
+        @message = assignMessage(session) 
+        if (isGuest(session)) # handles guests differently
+            @delivery = Delivery.new() # makes a blank delivery to assist the deliveryHelper method discern whether this is an edit or a new
+        elsif !(is_logged_in?(session)) # Logged in?
+            redirect_to login_path # Login
+        elsif !(isAdmin(session)) 
+            if (get_user_delivery != current_user(session)) # Correct user?
+                addErrorMessage("Cannot make a delivery for someone else") # Correct user.
+                redirect_to new_user_delivery_path(current_user(session)) # Go back
             end
-            @user = get_user_delivery
-            @delivery = Delivery.new()
+            @user = get_user_delivery # generate user object for the view
+            @delivery = Delivery.new() # makes a blank delivery to assist the deliveryHelper method discern whether this is an edit or a new
         else
             #Admin Stuff
         end
     end
 
     def payment_options
-        binding.pry
-        payPar = params.require(:delivery).permit(:user, :address, meal_attributes:[:name, :items[], :id])
-        @delivery = Delivery.new(user: User.find(payPar[:delivery][:user].to_i), address: payPar[:delivery][:address], 
-        meal: Meal.new(name: payPar[:delivery][:meal][:name], items: get_meal_items(payPar[:delivery][:meal][:items[]])))
+        payPar = delivery_with_meal_params()
+        if (payPar[:meal_attributes][:name] == "")
+            name = "Untitled Meal"
+        end
+        items = payPar[:meal_attributes][:items].map {| item_id | Item.find(item_id) }
+        @meal = Meal.create(name: name, items: items)
+        @delivery = Delivery.create(user: User.find(payPar[:user]), address: payPar[:address], meal: @meal)
+    end
+
+
+    def pay_with_cash
+        redirect_to user_path(current_user(session)) # Thank god, this is easy
+    end
+
+    def pay_with_credit
+        @user = User.find(params[:user_id]) # get the user
+        @delivery = Delivery.find(params[:del_id]) # get the delivery 
+        @user.credit = @user.credit - @delivery.price(@delivery.meal.price) # Credit = credit - price
+        redirect_to user_path(current_user(session)) # back to home
+    end
+
+    def cancel_delivery
+        Meal.last.delete # deletes the latest delivery (which is created the action right before this)
+        Delivery.last.delete # check above
+        redirect_to user_path(current_user(session))
+    end
+
+    # This will change a delivery from pending to delivered
+    def completed
+        @delivery = Delivery.find(params[:id])
+        @delivery.update(delivered: true)
     end
 
 private

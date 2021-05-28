@@ -14,15 +14,15 @@ module ItemsHelper
                 end
                 if (matches)
                     #"<p><input type= \"checkbox\" name= \"meal[items][]\" value= \"#{sel.id}\" 
-                    rStr+= "<p><input type= \"checkbox\" name= \"meal[items][]\" value= \"#{sel.id}\" checked> <#{sel.show}></p>"
+                    rStr+= "<p><input type= \"checkbox\" name= \"delivery[meal_attributes][items][]\" value= \"#{sel.id}\" checked> <#{sel.show}></p>"
                 else
-                    rStr+= "<p><input type= \"checkbox\" name= \"meal[items][]\" value= \"#{sel.id}\" > <#{sel.show}>"
+                    rStr+= "<p><input type= \"checkbox\" name= \"delivery[meal_attributes][items][]\" value= \"#{sel.id}\" > <#{sel.show}>"
                 end
             end
             end
         else
             foods.each do | sel |
-                rStr += "<p><input type= 'checkbox' name= 'meal[items][]' value= '#{sel.id}'> #{sel.show} </p>"
+                rStr += "<p><input type= 'checkbox' name= 'delivery[meal_attributes][items][]' value= '#{sel.id}'> #{sel.show} </p>"
             end
         end
         return rStr
@@ -30,7 +30,7 @@ module ItemsHelper
 
     def the_new_meal_form(delivery = nil)
         foodgroups = Item.get_foodgroups
-        rStr = "<p>(Optional) Meal Name: <input type= 'text' name='meal[name]'></p>"
+        rStr = "<p>(Optional) Meal Name: <input type= 'text' name='delivery[meal_attributes][name]'></p>"
         foodgroups.each do | sel |
             rStr+= "\n<h3>#{sel}</h3>"
             groupedFoods = Item.list_items_of_group(sel)

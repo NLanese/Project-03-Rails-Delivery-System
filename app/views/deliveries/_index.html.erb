@@ -1,0 +1,27 @@
+<h3>In-Progress Deliveries:</h3>
+<% if user_deliveries_pending(sel_user) != [nil] && user_deliveries_pending(sel_user) != nil %>
+    <%= user_deliveries_pending(sel_user).each do | del | %>
+      <p>-------------------------------------------------</p>
+      <p><strong>Deliver to: <%= del.address %></strong></p> 
+      <p>Contents:</p>
+      <%= del.meal.display.html_safe %>
+      <p><strong><%= button_to 'Order Delivered', order_delivered_path(del)%></strong></p>
+      <% end %>
+<% else %>
+  <p> Your In-Progress Deliveries Will Appear Here </p>
+<% end %>
+<br>
+<br>
+<br>
+<h3>Completed Deliveries:</h3>
+<% if user_deliveries_completed(sel_user) != [nil] && user_deliveries_completed(sel_user) != nil %>
+<%= user_deliveries_completed(sel_user).each do | del | %>
+  <p>-------------------------------------------------</p>
+  <p><strong>Deliver to: <%= del.address %></strong></p> 
+  <p>Contents:</p>
+  <%= del.meal.display.html_safe %>
+  <p><strong><%= link_to 'Order Again', order_again_path(del)%></strong></p>
+  <% end %>
+<% else %>
+  <p> Your Completed Deliveries Will Appear Here </p>
+<% end %>

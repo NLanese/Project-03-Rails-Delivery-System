@@ -1,0 +1,9 @@
+<h1>Confirm Delivery?</h1>
+<%= render partial: "deliveries/show", locals: {sel_del: @delivery} %>  
+<p>-------------------------------------------------</p>
+<h4>Price After Tax: <%= @delivery.price %>
+<h4>Your Credit: <%= current_user(session).credit %></h4>
+<% if (isGreaterThan(current_user(session).credit, @delivery.price)) %>
+    <%= link_to "Pay with User Credit", pay_with_credit_path(current_user(session), @delivery) %>
+<% end %>
+<%= link_to "Pay with Cash", pay_with_cash_path(@delivery) %>

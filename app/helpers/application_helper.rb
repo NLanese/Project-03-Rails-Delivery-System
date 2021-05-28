@@ -1,16 +1,6 @@
 module ApplicationHelper
 
 
-    def user_delivery_address_field(session)
-        if (isGuest(session))
-            return "<p>Address <input type= 'text' name= 'delivery[address]'></p>"
-        elsif (is_logged_in?(session))
-            return "<p>Address <input type= 'text' name= 'delivery[address]' value= '#{current_user(session).address}'></p>"
-        else
-            return "I haven't gotten here yet"
-        end
-    end
-
     def get_user
         return User.find(params[:id].to_i)
     end
@@ -101,60 +91,6 @@ module ApplicationHelper
         end
     end
 
-    def deliveryAction(session, delivery = nil)
-        if isGuest(session)
-            return "new_guest_delivery"
-        elsif (delivery && delivery.items != [])
-            return "edit_user_delivery"
-        else
-            return "new_user_delivery"
-        end
-    end
-
-    def user_deliveries_completed(user)
-        rArr = user.deliveries.map do | sel |
-            if sel.delivered == true
-                return sel
-            end
-        end
-        if rArr.length == 0
-            return nil
-        else
-            return rArr
-        end
-    end
-
-    def user_deliveries_pending(user)
-        rArr = user.deliveries.map do | sel |
-            if sel.delivered == false
-                return sel
-            end
-        end
-        if rArr.length == 0
-            return nil
-        else
-            return rArr
-        end
-    end
-
-    def display_delivery(del)
-        rStr = "==================================================\nContents:"       # ==============================================
-        rStr+= "\n" + del.meal.display                                               # Contents:
-        rStr+= "\n"                                                                  # <meal>
-        rStr+= "\nDeliver to #{del.address}"                                         # Deliver to 98 Linden Avenue
-        rStr+= "\nTip: $#{del.tip}"                                                  # Tip: $10.00
-        rStr+= "\nTotal: $#{del.price}"                                              # Total: $51.21
-        rStr+= "\n=================================================="                # ==============================================
-        rStr+= "\n<strong><%= link_to 'Order Again', order_again_path(del)%></strong>"# Order Again
-        return rStr
-    end
-
-    def display_deliveries(delArr)
-        delArr.each do | sel |
-            display_delivery(sel)
-        end
-    end
-
     def assignMessage(session)
         if has_errors?(session)
             return errorMsg(session)
@@ -183,7 +119,7 @@ module ApplicationHelper
     end
 
     def delivery_with_meal_params()
-        params.require(:delivery).permit(:user, :address, meal_attributes:[:name, :items[], :id])
+        params.require(:delivery).permit(:user, :address, meal_attributes:[:name, :items => []])
     end
 
     def get_meal_items(arr_of_ids)
@@ -200,5 +136,20 @@ module ApplicationHelper
         end
     end
 
+    def isGreaterThan(entry1, entry2)
+        if (entry1 >= entry2)
+            return true
+        else
+            false
+        end
+    end
+
+    def nicksDebugger(badCode, goodCode = nil)
+        badString = badCode
+        goodString = goodCode
+        puts (badString)
+        puts (goodString)
+        binding.pry
+    end
 
 end
