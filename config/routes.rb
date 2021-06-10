@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "login", to: "application#login"
   post "signup", to: "users#signup", as: "signup"
   get "signup", to: "users#signup"
+  patch "meals/:id", to: "meals#update"
   get "order_again/:id", to: "deliveries#order_again", as: "order_again"
   post "order_delivered/:id", to: "deliveries#completed", as: "order_delivered"
   get "logout", to: "sessions#destroy", as: "logout"

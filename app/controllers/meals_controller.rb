@@ -25,6 +25,14 @@ class MealsController < ApplicationController
         @meal = Meal.find(params[:id].to_i)
     end
 
+    def update
+        @meal = Meal.find(params[:id].to_i)
+        @meal.items = meal_params[:meal_attributes][:items].map {| item_id | Item.find(item_id.to_i) }
+        @meal.name = meal_params[:meal_attributes][:name]
+        @meal.save
+        redirect_to admin_meals_path
+    end
+
 
     def delete
         if (isAdmin(session))
@@ -38,6 +46,13 @@ class MealsController < ApplicationController
             addErrorMessage(session, "Only admins can delete meals")
             redirect_to user_path(current_user(session))
         end
+    end
+
+
+    private
+
+    def meal_params
+        params.require(:delivery).permit(meal_attributes: [ :name, :items => [] ] )
     end
 
 end

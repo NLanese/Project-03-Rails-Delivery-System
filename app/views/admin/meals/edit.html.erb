@@ -1,0 +1,5 @@
+<h1>Admin Meal Editor</h1>
+<%= form_for @meal do | f | %>
+    <%= the_new_meal_form(@meal).html_safe %>
+    <%= f.submit %>
+<% end %>

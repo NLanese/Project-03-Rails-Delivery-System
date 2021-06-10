@@ -88,6 +88,16 @@ class UsersController < ApplicationController
             clearErrorMessage(session)
         end
         @user = get_user
+        if (@user.uid != nil)
+            if (user_params[:new_password] != "" ) # changes password unless the form is left blank
+                @user.password = user_params[:new_password]
+            end
+            @user.address = user_params[:address]
+            @user.name = user_params[:name]
+            @user.save
+            clearErrorMessage(session)
+            redirect_to user_path(@user)
+        end
         if @user.authenticate(user_params[:password]) # to confirm changes, old password must be entered 
             if (user_params[:new_password] != "" ) # changes password unless the form is left blank
                 @user.password = user_params[:new_password]

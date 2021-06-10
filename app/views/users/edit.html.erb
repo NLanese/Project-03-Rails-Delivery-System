@@ -9,9 +9,11 @@
     <p>New Password (Optional): </p>
     <input type= "text" name= "user[new_password]">
     <br>
-    <p>Your old Password: </p>
-    <%= f.password_field :password %>
-    <br>
+    <% if (@user.uid == nil) %>
+        <p>Your old Password: </p>
+        <%= f.password_field :password %>
+        <br>
+    <% end %>
     <%= f.submit "Edit" %>
 <% end %>
 <br>

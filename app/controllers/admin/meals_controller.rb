@@ -1,6 +1,7 @@
 class Admin::MealsController < ApplicationController 
     include ApplicationHelper
-
+    include MealHelper
+    
     def index 
         @filters = ["None", "Under Fifty Dollars", "Under One Hundred Dollars", "Over One Hundred Dollars", "Meals with a Name"]
         if (session[:filter] != "none")
@@ -19,6 +20,10 @@ class Admin::MealsController < ApplicationController
             addErrorMessage(session, "Only admins can delete meals")
             redirect_to user_path(current_user(session))
         end
+    end
+
+    def edit
+        @meal = Meal.find(params[:id].to_i)
     end
     
 end
