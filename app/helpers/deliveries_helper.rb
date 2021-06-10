@@ -18,10 +18,10 @@ module DeliveriesHelper
     # Creats different pathways for a form. If the params indicate the order is being
     # editted rather than created, it will post somewhere else. It can also handle 
     # guest deliveries
-    def deliveryAction(session, delivery = nil)
+    def deliveryAction(session, meal = nil)
         if isGuest(session)   # Guest overrules all. Guests cannot edit meals
             return "new_guest_delivery"
-        elsif (delivery && delivery.items != [])
+        elsif (meal != nil)
             return "edit_user_delivery"  # This means the delivery given already has items thus is being editted
         else
             return "new_user_delivery" # This means the delivery is empty and was just created in the new action

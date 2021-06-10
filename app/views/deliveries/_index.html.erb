@@ -1,5 +1,5 @@
 <h3>In-Progress Deliveries:</h3>
-<% if user_deliveries_pending(sel_user) != [nil] && user_deliveries_pending(sel_user) != nil %>
+<% if user_deliveries_pending(sel_user) != [nil] && user_deliveries_pending(sel_user) != nil && user_deliveries_pending(sel_user) != [] %>
     <%= user_deliveries_pending(sel_user).each do | del | %>
       <p>-------------------------------------------------</p>
       <p><strong>Deliver to: <%= del.address %></strong></p> 
@@ -14,7 +14,7 @@
 <br>
 <br>
 <h3>Completed Deliveries:</h3>
-<% if user_deliveries_completed(sel_user) != [nil] && user_deliveries_completed(sel_user) != nil %>
+<% if user_deliveries_completed(sel_user) != [nil] && user_deliveries_completed(sel_user) != nil && user_deliveries_completed(sel_user) != [] %>
 <%= user_deliveries_completed(sel_user).each do | del | %>
   <p>-------------------------------------------------</p>
   <p><strong>Deliver to: <%= del.address %></strong></p> 

@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
     include ApplicationHelper
 
     def welcome
+        clearErrorMessage(session)
         if is_logged_in?(session)
             redirect_to user_path(current_user(session))
         else

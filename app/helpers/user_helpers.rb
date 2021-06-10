@@ -8,7 +8,7 @@ def isAdmin(session)
     end
 end
 
-def self.isGuest(session)
+def isGuest(session)
     if session[:guest]
         true
     else

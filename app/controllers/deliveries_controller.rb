@@ -24,6 +24,10 @@ class DeliveriesController < ApplicationController
         end
     end
 
+    def edit
+        @delivery = Delivery.find(params[:id])
+    end
+
 
     def new
         @message = assignMessage(session) 
@@ -37,7 +41,7 @@ class DeliveriesController < ApplicationController
                 redirect_to new_user_delivery_path(current_user(session)) # Go back
             end
             @user = get_user_delivery # generate user object for the view
-            @delivery = Delivery.new() # makes a blank delivery to assist the deliveryHelper method discern whether this is an edit or a new
+            
         else
             #Admin Stuff
         end
@@ -47,21 +51,59 @@ class DeliveriesController < ApplicationController
         payPar = delivery_with_meal_params()
         if (payPar[:meal_attributes][:name] == "")
             name = "Untitled Meal"
+        else
+            name = payPar[:meal_attributes][:name]
         end
-        items = payPar[:meal_attributes][:items].map {| item_id | Item.find(item_id) }
-        @meal = Meal.create(name: name, items: items)
-        @delivery = Delivery.create(user: User.find(payPar[:user]), address: payPar[:address], meal: @meal)
+        items = payPar[:meal_attributes][:items].map {| item_id | Item.find(item_id.to_i) }
+        compArr = items.map do | itm |  # I'm doing this becausew for some reason Meal.find(items: items) always returns nil even when the items match an existing meal
+            itm.id
+        end
+        Meal.all.each do | m | # so much extra work my god
+            matcher = true
+            testArr = m.items.map do | itm |
+                itm.id
+            end
+            testArr = testArr.sort() # sorts all the id's of the currently selected meal
+            compArr = compArr.sort() # sorts all the id's of the new meal
+            if (compArr.length == testArr.length)
+                len = compArr.length # lets me set up a f*****king while loop because thats what I have to do now to compare EACH ITEM 
+                i = 0
+                while (i < len)
+                    if compArr[i] != testArr[i] # if a sorted item in our new meal does not equal the sorted id of this meal, then it is not the same meal
+                        matcher = false
+                    end # no else, because if that conditional above is never hit and the lengths are thge same, matches will be true
+                    i+= 1
+                end
+                if (matcher) # if it goes through the entire id array and both are identical (same meal contents)
+                    @meal = m
+                end
+            end
+        end
+        if (@meal == nil)
+            @meal = Meal.create(name: name, items: items)
+            @meal.times_purchased = 0
+        end
+        binding.pry
+        @delivery = Delivery.create(user: User.find(payPar[:user]), address: payPar[:address], meal: @meal, price: (@meal.price * 1.07).round(2))
     end
 
 
     def pay_with_cash
+        @delivery = Delivery.find(params[:del_id])
+        @delivery.meal.times_purchased+= 1
+        @delivery.meal.items = @delivery.meal.items.uniq
+        @delivery.save
         redirect_to user_path(current_user(session)) # Thank god, this is easy
     end
 
     def pay_with_credit
         @user = User.find(params[:user_id]) # get the user
         @delivery = Delivery.find(params[:del_id]) # get the delivery 
-        @user.credit = @user.credit - @delivery.price(@delivery.meal.price) # Credit = credit - price
+        @delivery.meal.times_purchased+= 1
+        @delivery.meal.items = @delivery.meal.items.uniq
+        @user.credit = @user.credit - @delivery.price # Credit = credit - price
+        @user.save
+        @delivery.save
         redirect_to user_path(current_user(session)) # back to home
     end
 
@@ -75,6 +117,11 @@ class DeliveriesController < ApplicationController
     def completed
         @delivery = Delivery.find(params[:id])
         @delivery.update(delivered: true)
+        redirect_to user_path(current_user(session))
+    end
+
+    def order_again_path
+
     end
 
 private

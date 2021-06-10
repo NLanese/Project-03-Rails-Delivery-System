@@ -14,6 +14,7 @@
 <h5>--------------------------------------------------------------------------</h5>
 <h3>
   <%= link_to "Place New Order", new_user_delivery_path(@user) %>
+  Or <%= link_to "Browse Existing Meals", meals_path %> from other users!
 </h3>
 <br>
 <%= render partial: "deliveries/index", locals: {sel_user: @user} %>

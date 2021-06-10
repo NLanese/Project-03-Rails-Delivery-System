@@ -17,6 +17,7 @@ class Admin::UsersController < ApplicationController
         @user.address = user_params[:address]
         @user.name = user_params[:name]
         @user.save
+        binding.ory
     end
 
     def delete

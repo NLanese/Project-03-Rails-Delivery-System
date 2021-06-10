@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_10_041302) do
+ActiveRecord::Schema.define(version: 2021_06_09_071510) do
 
   create_table "deliveries", force: :cascade do |t|
     t.string "address"
@@ -46,6 +46,8 @@ ActiveRecord::Schema.define(version: 2021_05_10_041302) do
     t.string "password_digest"
     t.decimal "credit"
     t.boolean "admin"
+    t.string "uid"
+    t.string "provider"
   end
 
 end

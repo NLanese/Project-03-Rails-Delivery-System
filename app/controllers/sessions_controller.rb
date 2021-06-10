@@ -3,8 +3,12 @@ class SessionsController < ApplicationController
 
     def create
         @user = User.find_by(name: sessions_params[:name])
-        if @user.authenticate(sessions_params[:password])
+        if (@user == nil)
+            addErrorMessage(session, "User does not exist!")
+            redirect_to signup_path
+        elsif @user.authenticate(sessions_params[:password])
             clearErrorMessage(session)
+            session[:filter] = "none"
             set_current_user(session, @user)
             session[:guest] = false
             session[:admin] = false
@@ -17,9 +21,11 @@ class SessionsController < ApplicationController
         end
     end
 
+    def oauth
+    end
+
     def destroy
         clear_user(session)
-        #binding.pry
         redirect_to root_path
     end
 

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root "application#welcome"
+  get 'auth/:provider/callback', to: 'sessions#oauth'
   get "welcome", to: "application#welcome", as: "welcome"
   post "login", to: "application#login", as: "login"
   get "login", to: "application#login"
@@ -20,12 +21,16 @@ Rails.application.routes.draw do
   get "guests/deliveries/new", to: "deliveries#new", as: "guest_delivery"
   get "user/:user_id/delivery/:del_id/pay_with_credit", to: "deliveries#pay_with_credit", as: "pay_with_credit"
   get "user/delivery/:del_id/pay_with_cash", to: "deliveries#pay_with_cash", as: "pay_with_cash"
+  get "delete/meal/:id", to: "meals#delete", as: "delete_admin_meal"
+  post "meals", to: "meals#index", as: "filtered_meals"
+  post "users/:user_id/meals/:meal_id/edit_user_delivery", to: "deliveries#payment_options"
 
 
   resources :users, only: [:new, :create, :edit, :update, :show] do
-    resources :deliveries, only: [:index, :show, :new, :create] # Index - Shows all your deliveries, seperated by delivered or not. New makes a new.... duh. Edit non-destructively makes a new one
-    resources :meals, only: [:new, :create, :update, :create, :index, :show]
+    resources :deliveries, only: [:index, :show, :new, :create, :edit, :update] # Index - Shows all your deliveries, seperated by delivered or not. New makes a new.... duh. Edit non-destructively makes a new one
+    resources :meals, only: [:new, :create, :update, :create, :show, :edit]
   end
+  resources :meals, only: [:index, :show]
 
   namespace :admin do
     resources :users

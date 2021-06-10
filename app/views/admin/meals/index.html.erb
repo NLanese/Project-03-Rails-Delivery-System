@@ -1,0 +1,33 @@
+<h1>All Meals</h1>
+<%= link_to "Return", user_path(current_user(session)) %>
+<p>----------------------------------</p>
+<form method= "post" action= "meals">
+    <select name= "filter">
+        <% @filters.each do | filt | %>
+            <option value= <% filt %>>
+                <%= filt %>
+            </option>
+        <% end %>
+    </select>
+    <input type="submit" value="Filter Meals">
+</form>
+<p>----------------------------------</p>
+<% @meals.each do | meal | %>
+    <p><strong>_______________________________</strong></p>
+    <p>Name: <%= meal.name %>
+    <p>Times Ordered: <%= meal.times_purchased %>
+    <p<Contents:</p>
+    <ul>
+    <% meal.items.each do | itm | %>
+        <li><%= itm.name %> - <%= itm.price %></li>
+    <% end %>
+    </ul>
+    <p>First Ordered By: <%= meal.users[0].name %></p>
+    <p>Subtotal: <%= meal.price %></p>
+    <% if isAdmin(session) %>
+    <p>--------Admin Menu--------</p>
+        <%= link_to "Edit", edit_admin_meal_path(meal) %>
+        <%= link_to "Delete", delete_admin_meal_path(meal) %>
+    <p>--------------------------</p>
+    <% end %>
+<% end %>

@@ -1,1 +1,7 @@
-<%= display_delivery(sel_del) %>.html_safe
+
+<p>==================================================</p>
+<p><strong>Deliver to: <%= sel_del.address %></strong></p>
+<p>Contents:</p>
+<%=  sel_del.meal.display.html_safe %>
+<p>Total: <%= sel_del.price %></p>
+<p>==================================================</p>
