@@ -52,8 +52,7 @@ class UsersController < ApplicationController
         @user = get_user
         if (isAdmin(session))
             clearErrorMessage(session)
-        end
-        if (@user != current_user(session)) # if the user id entered in the request does not match the id of the user currently logged in
+        elsif (@user != current_user(session)) # if the user id entered in the request does not match the id of the user currently logged in
             addErrorMessage(session, "You cannot delete someone else's account!") # correct error message
             redirect_to user_path(current_user(session)) 
         else
@@ -63,11 +62,24 @@ class UsersController < ApplicationController
 
     # this ACTUALLY deletes a user
     def hard_delete   # This actually deletes the user. Only comes from delete.html.erb
+        if (get_user == nil)
+            redirect_to welcome_path
+        end
         @user = get_user # finds the user
-        redirect_if_invalid(session) # makes sure you're not deleting someone else's account (applicationHelper)
-        @user.delete # deletes the user
-        clearSession(session)
-        redirect_to welcome_path # sends you to welcome
+        if (current_user(session).admin || current_user(session) == User.find(params[:id]))
+            if (isAdmin(session))
+                @user.delete # deletes the user
+                redirect_to user_path(current_user(session))
+            else
+                session[:user_id] = nil
+                clearSession(session)
+                @user.delete # deletes the user
+                redirect_to welcome_path # sends you to welcome
+            end
+        else
+            addErrorMessage(session, "Cannot delete other peoples' accounts!")
+            redirect_to user_path(current_user(session))
+        end
     end
 
     # duh

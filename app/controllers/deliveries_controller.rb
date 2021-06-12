@@ -26,6 +26,7 @@ class DeliveriesController < ApplicationController
 
     def edit
         @delivery = Delivery.find(params[:id])
+        @meal = @delivery.meal
     end
 
 
@@ -83,8 +84,11 @@ class DeliveriesController < ApplicationController
             @meal = Meal.create(name: name, items: items)
             @meal.times_purchased = 0
         end
-        binding.pry
-        @delivery = Delivery.create(user: User.find(payPar[:user]), address: payPar[:address], meal: @meal, price: (@meal.price * 1.07).round(2))
+        @delivery = Delivery.create(user: User.find(payPar[:user]), address: payPar[:address], meal: @meal, price: (@meal.price * 1.07).round(2), delivered: false)
+        if (@delivery.id == nil)
+            addErrorMessage(session, "Please fill in your address and select items!") 
+            redirect_to new_user_delivery_path(current_user(session))
+        end
     end
 
 

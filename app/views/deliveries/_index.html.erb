@@ -20,7 +20,7 @@
   <p><strong>Deliver to: <%= del.address %></strong></p> 
   <p>Contents:</p>
   <%= del.meal.display.html_safe %>
-  <p><strong><%= link_to 'Order Again', order_again_path(del)%></strong></p>
+  <p><strong><%= link_to 'Order Again', edit_user_delivery_path(sel_user, del)%></strong></p>
   <% end %>
 <% else %>
   <p> Your Completed Deliveries Will Appear Here </p>

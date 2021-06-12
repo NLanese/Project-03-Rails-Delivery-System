@@ -4,7 +4,7 @@
     <% if sel.admin %>
         Admin Account
     <% end %>
-    <h2><%= sel.name %></h2>
+    <h2><%= link_to sel.name, admin_user_path(sel) %></h2>
     <p>address: <%= sel.address %></p>
     <p>credit: <%= sel.credit %></p>
     <%= link_to 'Edit', edit_admin_user_path(sel) %>

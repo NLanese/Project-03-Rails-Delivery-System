@@ -72,6 +72,9 @@ module ApplicationHelper
     end
 
     def clearSession(session)
+        session[:user_id] = nil
+        session[:isGuest] = nil
+        session[:isAdmin] = nil
         session = []
     end
 

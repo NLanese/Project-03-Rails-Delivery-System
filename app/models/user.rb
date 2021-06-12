@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
     has_many :items, through: :meals
 
     def isFilled(session)
-        if (address == "" || name == " " || email == "" || password_digest == "")
+        if (address == "" || name == "" || email == "" || password_digest == "")
             return false
         else
             return true

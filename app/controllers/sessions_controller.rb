@@ -27,7 +27,7 @@ class SessionsController < ApplicationController
             set_up_login(session, @user)
             redirect_to user_path(@user)
         else
-            @user = User.create(name: name, email: email, uid: uid, password_digest: data[:credentials][:token])
+            @user = User.create(name: name, email: email, uid: uid, password_digest: data[:credentials][:token], credit: 0)
             clearErrorMessage(session)
             set_up_login(session, @user)
             redirect_to user_path(@user)
